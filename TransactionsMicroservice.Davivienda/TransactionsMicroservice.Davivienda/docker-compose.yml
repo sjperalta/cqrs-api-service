@@ -1,6 +1,20 @@
 version: "3.9"
 
 services:
+    rabbitmq: # login guest:guest
+        image: rabbitmq:3-management
+        hostname: "rabbitmq"
+        labels:
+          NAME: "rabbitmq"
+        ports:
+            - "4369:4369"
+            - "5671:5671"
+            - "5672:5672"
+            - "25672:25672"
+            - "15671:15671"
+            - "15672:15672"
+        volumes:
+            - rabbitmq:/rabbitmq
     bankDbServer:
         image: "mcr.microsoft.com/mssql/server:2022-latest"
         ports:
@@ -19,3 +33,6 @@ services:
           - "8081:443"
         depends_on:
           - bankDbServer
+          - rabbitmq
+volumes:
+    rabbitmq:

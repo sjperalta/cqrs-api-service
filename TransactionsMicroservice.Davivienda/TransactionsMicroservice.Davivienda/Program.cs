@@ -1,11 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using TransactionsMicroservice.Davivienda;
+using TransactionsMicroservice.Davivienda.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+builder.Services.AddTransient<IMessageConsumer, TransactionConsumer>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -26,6 +27,12 @@ if (app.Environment.IsDevelopment())
         bankContext.Database.EnsureCreated();
     }
 }
+
+//using(var scope = app.Services.CreateScope())
+//{
+//    var messageConsumer = scope.ServiceProvider.GetRequiredService<IMessageConsumer>();
+//    messageConsumer.ReceiveMessage();
+//}
 
 //app.UseHttpsRedirection();
 
