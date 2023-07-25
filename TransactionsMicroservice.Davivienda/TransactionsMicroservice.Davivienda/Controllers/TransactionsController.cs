@@ -17,7 +17,7 @@ namespace TransactionsMicroservice.Davivienda.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet()]
+        [HttpGet]
         public async Task<ActionResult<List<Transaction>>> GetTransactions()
         {
             var query = new GetTransactionQuery();
