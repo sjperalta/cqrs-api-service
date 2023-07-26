@@ -1,0 +1,38 @@
+﻿version: "3.9"
+
+services:
+  rabbitmq: # login guest:guest
+        image: rabbitmq:3-management
+        hostname: "rabbitmq"
+        labels:
+          NAME: "rabbitmq"
+        ports:
+            - "4369:4369"
+            - "5671:5671"
+            - "5672:5672"
+            - "25672:25672"
+            - "15671:15671"
+            - "15672:15672"
+        volumes:
+            - rabbitmq:/rabbitmq
+  bankDbServer:
+        image: "mcr.microsoft.com/mssql/server:2022-latest"
+        ports:
+          - "1433:1433"
+        environment:
+            SA_PASSWORD: "Admin12345!"
+            ACCEPT_EULA: "Y"
+  api:
+        build:
+          context: .
+          dockerfile: Dockerfile
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
+        ports:
+          - "8080:80"
+          - "8081:443"
+        depends_on:
+          - bankDbServer
+          - rabbitmq
+volumes:
+    rabbitmq:

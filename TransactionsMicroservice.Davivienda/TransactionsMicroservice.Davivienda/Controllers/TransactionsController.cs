@@ -18,8 +18,9 @@ namespace TransactionsMicroservice.Davivienda.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Transaction>>> GetTransactions(GetTransactionQuery query)
+        public async Task<ActionResult<List<Transaction>>> GetTransactions()
         {
+            var query = new GetTransactionQuery();
             var transactions = await _mediator.Send(query);
             return Ok(transactions);
         }
