@@ -6,37 +6,18 @@ using TransactionsMicroservice.Davivienda.Models;
 
 namespace TransactionsMicroservice.Davivienda.Infrastructure
 {
-    public class TransactionConsumer : IMessageConsumer
+    public class TransactionConsumer : ConnectionBuilderBase, IMessageConsumer
     {
-        private readonly string _rabbitMQHost;
-        private readonly string _userName;
-        private readonly string _password;
-        private readonly string _port;
-        private readonly string _exchangeName;
-        //private readonly string _queueName;
-
-        public TransactionConsumer(IConfiguration configuration)
+        public TransactionConsumer(IConfiguration configuration) : base(configuration) { }
+        
+        public void Consume()
         {
-            _rabbitMQHost = configuration["RabbitMQ:Host"];
-            _userName = configuration["RabbitMQ:UserName"];
-            _password = configuration["RabbitMQ:Password"];
-            _exchangeName = configuration["RabbitMQ:ExchangeName"]; // Add a new key for ExchangeName
-            _port = configuration["RabbitMQ:Port"];                                                 //_queueName = configuration["RabbitMQ:QueueName"]; // Add a new key for QueueName
-        }
-
-        public void ReceiveMessage()
-        {
-            var factory = new ConnectionFactory()
-            {
-                HostName = _rabbitMQHost,
-                Port = int.Parse(_port),
-                UserName = _userName,
-                Password = _password
-            };
+            var factory = GetConnection;
+            Console.WriteLine("Trying to get a connection");
 
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
-            {
+            { 
                 channel.ExchangeDeclare(exchange: _exchangeName, type: ExchangeType.Fanout);
 
                 // Declare a new queue and bind it to the fanout exchange
@@ -45,6 +26,7 @@ namespace TransactionsMicroservice.Davivienda.Infrastructure
                                   exchange: _exchangeName,
                                   routingKey: "");
 
+                Console.WriteLine("RabbitMQ consuming messages.");
                 var consumer = new EventingBasicConsumer(channel);
                 consumer.Received += (model, ea) =>
                 {

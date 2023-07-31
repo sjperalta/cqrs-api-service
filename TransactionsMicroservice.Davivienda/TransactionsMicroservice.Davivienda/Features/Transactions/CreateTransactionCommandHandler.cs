@@ -1,4 +1,6 @@
 using MediatR;
+using Newtonsoft.Json;
+using TransactionsMicroservice.Davivienda.Infrastructure;
 using TransactionsMicroservice.Davivienda.Models;
 
 namespace TransactionsMicroservice.Davivienda.Features.Transactions
@@ -6,8 +8,11 @@ namespace TransactionsMicroservice.Davivienda.Features.Transactions
    public class CreateTransactionCommandHandler : IRequestHandler<CreateTransactionCommand, int>
    {
         private readonly BankDbContext _context;
-        public CreateTransactionCommandHandler(BankDbContext context){
+        private readonly IMessageProducer _messageProducer;
+        public CreateTransactionCommandHandler(BankDbContext context, IMessageProducer messageProducer)
+        {
             _context = context;
+            _messageProducer = messageProducer;
         }
 
         public async Task<int> Handle(CreateTransactionCommand request, CancellationToken cancellationToken)
@@ -22,6 +27,9 @@ namespace TransactionsMicroservice.Davivienda.Features.Transactions
                 };
                 _context.Transactions.Add(transaction);
                 await _context.SaveChangesAsync(cancellationToken);
+                
+                var message = JsonConvert.SerializeObject(transaction);
+                _messageProducer.Produce(message);
 
                 return transaction.TransactionId;
             }

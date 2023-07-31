@@ -2,6 +2,6 @@
 {
     public interface IMessageConsumer
     {
-        void ReceiveMessage();
+        void Consume();
     }
 }
