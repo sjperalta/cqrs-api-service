@@ -28,11 +28,11 @@ if (app.Environment.IsDevelopment())
         bankContext.Database.EnsureCreated();
     }
 
-    using (var scope = app.Services.CreateScope())
-    {
-        var messageConsumer = scope.ServiceProvider.GetRequiredService<IMessageConsumer>();
-        messageConsumer.Consume();
-    }
+    //using (var scope = app.Services.CreateScope())
+    //{
+    //    var messageConsumer = scope.ServiceProvider.GetRequiredService<IMessageConsumer>();
+    //    messageConsumer.Consume();
+    //}
 }
 
 //app.UseHttpsRedirection();

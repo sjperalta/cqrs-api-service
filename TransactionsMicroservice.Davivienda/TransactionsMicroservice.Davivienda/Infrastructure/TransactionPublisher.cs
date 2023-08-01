@@ -16,7 +16,7 @@ namespace TransactionsMicroservice.Davivienda.Infrastructure
             using var channel = connection.CreateModel();
 
             channel.QueueDeclare(queue: _queueName,
-                                 durable: false,
+                                 durable: true,
                                  exclusive: false,
                                  autoDelete: false,
                                  arguments: null);
@@ -26,7 +26,7 @@ namespace TransactionsMicroservice.Davivienda.Infrastructure
                 routingKey: _queueName,
                 basicProperties: null,
                 body: body);
-
+            
             Console.WriteLine($" [x] Rabbit Sent Message Type: {typeof(Transaction)} - body {message}");
         }
     }
