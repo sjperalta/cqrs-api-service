@@ -14,6 +14,7 @@ builder.Services.AddScoped<IMessageProducer, TransactionPublisher>();
 builder.Services.AddScoped<IMessageConsumer, TransactionConsumer>();
 builder.Services.AddDbContext<BankDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -31,6 +31,9 @@ namespace TransactionsMicroservice.Davivienda.Features.Transactions
                 var message = JsonConvert.SerializeObject(transaction);
                 _messageProducer.Produce(message);
 
+                var message = JsonConvert.SerializeObject(transaction);
+                _messageProducer.Produce(message);
+
                 return transaction.TransactionId;
             }
             catch(Exception)
